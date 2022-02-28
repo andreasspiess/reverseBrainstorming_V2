@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class PositivForm {
 
-    private int id;
+    private Integer id;
     private String positiv;
-    private int positiv_id;
+    private int negativ_id;
 
     public String getPositiv() {
         return positiv;

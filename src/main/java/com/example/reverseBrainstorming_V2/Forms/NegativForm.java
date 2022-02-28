@@ -8,9 +8,9 @@ import lombok.Setter;
 @Setter
 public class NegativForm {
 
-    private int id;
+    private Integer id;
     private String negativ;
-    private int negativ_id;
+    private int problem_id;
 
 
 
@@ -20,5 +20,21 @@ public class NegativForm {
 
     public void setNegativ(String negativ) {
         this.negativ = negativ;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public int getProblem_id() {
+        return problem_id;
+    }
+
+    public void setProblem_id(int problem_id) {
+        this.problem_id = problem_id;
     }
 }

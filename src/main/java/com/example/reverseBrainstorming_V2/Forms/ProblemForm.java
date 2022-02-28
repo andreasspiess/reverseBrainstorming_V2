@@ -6,8 +6,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ProblemForm {
+    private Integer id;
     private String problem;
-    private long id;
 
     @Override
     public String toString() {

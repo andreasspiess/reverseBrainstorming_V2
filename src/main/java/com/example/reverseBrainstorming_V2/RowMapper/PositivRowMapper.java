@@ -12,8 +12,8 @@ public class PositivRowMapper implements RowMapper <PositivForm> {
     public PositivForm mapRow(ResultSet rs, int rowNum) throws SQLException {
         PositivForm result = new PositivForm();
         result.setId(rs.getInt("id"));
-        result.setPositiv(rs.getString("description"));
-        result.setPositiv_id(rs.getInt("problem_id"));
+        result.setPositiv(rs.getString("positiv"));
+        result.setNegativ_id(rs.getInt("negativ_id"));
 
         return result;
     }

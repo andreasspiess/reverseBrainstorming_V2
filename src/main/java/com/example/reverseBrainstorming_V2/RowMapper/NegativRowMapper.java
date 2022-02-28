@@ -12,8 +12,8 @@ public class NegativRowMapper implements RowMapper <NegativForm> {
     public NegativForm mapRow(ResultSet rs, int rowNum) throws SQLException {
         NegativForm result = new NegativForm();
         result.setId(rs.getInt("id"));
-        result.setNegativ(rs.getString("description"));
-        result.setNegativ_id(rs.getInt("positiv_id"));
+        result.setNegativ(rs.getString("negativ"));
+        result.setProblem_id(rs.getInt("negativ_id"));
 
         return result;
     }
