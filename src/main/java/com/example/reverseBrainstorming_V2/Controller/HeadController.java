@@ -3,6 +3,8 @@ package com.example.reverseBrainstorming_V2.Controller;
 import com.example.reverseBrainstorming_V2.Forms.NegativForm;
 import com.example.reverseBrainstorming_V2.Forms.PositivForm;
 import com.example.reverseBrainstorming_V2.Forms.ProblemForm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,9 @@ import java.util.List;
 @Controller
 public class HeadController {
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private static List<NegativForm> negativFormList = new ArrayList<>();
     private static List<PositivForm> positivFormList = new ArrayList<>();
     private static String problem;
@@ -21,12 +26,16 @@ public class HeadController {
 
     @GetMapping("/")
     public String getStartPage(Model model) {
+
         model.addAttribute("saveProblem", new ProblemForm());
         return "stepOne";
     }
 
     @PostMapping("/")
     public String saveProblem(Model model, ProblemForm problemForm) {
+
+        jdbcTemplate.update("INSERT INTO PROBLEM VALUES(?, ?)", problemForm.getId(), problemForm.getProblem());
+
         model.addAttribute("saveProblem", new ProblemForm());
         problem = String.valueOf(problemForm);
         System.out.println(problem);
@@ -42,6 +51,9 @@ public class HeadController {
 
     @PostMapping("stepTwo")
     public String saveNegativIdeas (Model model, NegativForm negativForm) {
+
+        jdbcTemplate.update("INSERT INTO NEGATIV VALUES(?, ?, ?)", negativForm.getId(), negativForm.getNegativ(), negativForm.getProblem_id());
+
         model.addAttribute("saveNegativIdeas", new NegativForm());
         model.addAttribute("problem", problem.toString());
         negativFormList.add(negativForm);
