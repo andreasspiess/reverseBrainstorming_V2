@@ -109,16 +109,16 @@
             <table class="table table-dark mt-3" >
 
                 <thead class="background">
-                <tr class="table">
-                    <th scope="row"
-                        th:text="${x.getNegativ}">
-                    </th>
-                </tr>
+                    <tr class="table">
+                        <th scope="row"
+                            th:text="${x.getNegativ}">
+                        </th>
+                    </tr>
                 </thead>
                 <tbody th:each="y : ${positivFormList}">
-                <td scope="col"
-                    th:text="${y.getPositiv}">
-                </td>
+                    <td scope="col"
+                        th:text="${y.getPositiv}">
+                    </td>
                 </tbody>
             </table>
         </div>

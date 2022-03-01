@@ -4,6 +4,7 @@ import com.example.reverseBrainstorming_V2.Forms.NegativForm;
 import com.example.reverseBrainstorming_V2.Forms.PositivForm;
 import com.example.reverseBrainstorming_V2.Forms.ProblemForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,9 +41,9 @@ public class HeadController {
                 .withTableName("problem").usingGeneratedKeyColumns("id");
     }
 
-    public long insertProblem(String problemText) {
+    public Integer saveProblemToDBandReturnID (ProblemForm problemForm) {
         Map<String, Object> parameters = new HashMap<>(1);
-        parameters.put("description", problemText);
+        parameters.put("problem", problemForm.getProblem());
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
         return (Integer) newId;
     }
@@ -50,38 +51,40 @@ public class HeadController {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static List<NegativForm> negativFormList = new ArrayList<>();
-    private static List<PositivForm> positivFormList = new ArrayList<>();
+    private static final List<NegativForm> negativFormList = new ArrayList<>();
+    private static final List<PositivForm> positivFormList = new ArrayList<>();
     private static String problem;
-    //private static List<String> outputList = new ArrayList<>();
 
     @GetMapping("/")
     public String getStartPage(Model model) {
 
         model.addAttribute("saveProblem", new ProblemForm());
+
         return "stepOne";
     }
 
     @PostMapping("/")
     public String saveProblem(Model model, ProblemForm problemForm) {
 
-        jdbcTemplate.update("INSERT INTO PROBLEM VALUES(?, ?)", problemForm.getId(), problemForm.getProblem());
-        long problem_id = insertProblem(problemForm.getProblem());
+        //jdbcTemplate.update("INSERT INTO PROBLEM(problem) VALUES(?)", problemForm.getProblem());
 
-        model.addAttribute("saveProblem", new ProblemForm());
-        problem = String.valueOf(problemForm);
+        Integer saveId = this.saveProblemToDBandReturnID(problemForm);
+        NegativForm negativForm = new NegativForm();
+        negativForm.setProblem_id(saveId.intValue());
+
+        model.addAttribute("saveNegativIdeas", negativForm);
+        problem = problemForm.getProblem();
         System.out.println(problem);
-        return "stepOne";
+        model.addAttribute("problem", problem);
+
+        return "stepTwo";
     }
 
     @GetMapping("stepTwo")
-    public String getNegativIdeas (Model model, NegativForm negativForm, ProblemForm problemForm) {
-        NegativForm form = new NegativForm();
-
-        form.setProblem_id(1);
+    public String getNegativIdeas (Model model, NegativForm negativForm) {
 
         model.addAttribute("saveNegativIdeas", new NegativForm());
-        model.addAttribute("problem", problem.toString());
+
         return "stepTwo";
     }
 
@@ -89,12 +92,14 @@ public class HeadController {
     public String saveNegativIdeas (Model model, NegativForm negativForm) {
 
         jdbcTemplate.update("INSERT INTO NEGATIV VALUES(?, ?, ?)", negativForm.getId(), negativForm.getNegativ(), negativForm.getProblem_id());
-        long problem_id = insertProblem(negativForm.getNegativ());
 
-        model.addAttribute("saveNegativIdeas", new NegativForm());
+        NegativForm newNegativForm = new NegativForm();
+        newNegativForm.setProblem_id(negativForm.getProblem_id());
+
+        model.addAttribute("saveNegativIdeas", newNegativForm);
         model.addAttribute("problem", problem.toString());
         negativFormList.add(negativForm);
-        System.out.println(negativFormList);
+
         return "stepTwo";
     }
 
@@ -103,17 +108,25 @@ public class HeadController {
         model.addAttribute("saveNegativIdeas", new NegativForm());
         model.addAttribute("savePositivIdeas", new PositivForm());
         model.addAttribute("negativFormList", negativFormList);
+
         return "stepThree";
     }
 
     @PostMapping("stepThree")
     public String savePositivIdeas(Model model, PositivForm positivForm, NegativForm negativForm) {
+
+        jdbcTemplate.update("INSERT INTO POSITIV VALUES(?, ?, ?)", positivForm.getId(), positivForm.getPositiv(), positivForm.getNegativ_id());
+
         model.addAttribute("savePositivIdeas", new PositivForm());
         model.addAttribute("negativFormList", negativFormList);
 
+//        Integer saveId = this.saveProblemToDBandReturnID(ProblemForm);
+//        PositivForm newPositivForm = new PositivForm();
+//        newPositivForm.setNegativ_id(positivForm.getNegativ_id());
+
         positivFormList.add(positivForm);
         model.addAttribute("PositivFormList", positivFormList);
-        System.out.println(negativFormList + "," + positivFormList);
+
         return "stepThree";
     }
 
