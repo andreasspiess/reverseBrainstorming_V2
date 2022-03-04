@@ -14,7 +14,7 @@
     .body2 {
 
     color: #26272a;
-    margin-top: 5px;
+    margin: 5px auto;
     background-color: #8a8992;
     display: flex;
     width: auto;
@@ -204,9 +204,9 @@
 <body>
 
 <ul>
-    <li><a class="active" href="location.href='http://localhost:8080/stepOne'">Home</a></li>
+    <li><a class="active" href="/">Home</a></li>
     <li><a href="#news">News</a></li>
-    <li><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Über uns</a></li>
+    <li><a href="#">Über uns</a></li>
     <li style="float:right"><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Wikipedia Link</a></li>
 </ul>
 
@@ -234,7 +234,8 @@
                     <button class="buttonOk" type="submit">Speichern</button>
                     <button class="buttonLöschen" type="reset">Löschen</button>
                 </div>
-                <button class="glow-on-hover" type="button" onclick="location.href='http://localhost:8080/stepThree'">nächster Schritt -></button>
+               <!-- <button class="glow-on-hover" type="button" onclick="location.href='http://localhost:8080/stepThree'">nächster Schritt -></button>-->
+                <a class="glow-on-hover" th:href="${'/stepThree?problem_id=' + saveNegativIdeas.problem_id}">nächster Schritt -></a>
             </div>
         </form>
     </div>

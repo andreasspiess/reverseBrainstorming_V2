@@ -3,6 +3,8 @@ package com.example.reverseBrainstorming_V2.Controller;
 import com.example.reverseBrainstorming_V2.Forms.NegativForm;
 import com.example.reverseBrainstorming_V2.Forms.PositivForm;
 import com.example.reverseBrainstorming_V2.Forms.ProblemForm;
+import com.example.reverseBrainstorming_V2.RowMapper.NegativRowMapper;
+import com.example.reverseBrainstorming_V2.RowMapper.PositivRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -48,6 +51,9 @@ public class HeadController {
         return (Integer) newId;
     }
 
+
+
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -65,8 +71,6 @@ public class HeadController {
 
     @PostMapping("/")
     public String saveProblem(Model model, ProblemForm problemForm) {
-
-        //jdbcTemplate.update("INSERT INTO PROBLEM(problem) VALUES(?)", problemForm.getProblem());
 
         Integer saveId = this.saveProblemToDBandReturnID(problemForm);
         NegativForm negativForm = new NegativForm();
@@ -104,37 +108,47 @@ public class HeadController {
     }
 
     @GetMapping("stepThree")
-    public String getPositivIdeas(Model model, PositivForm positivForm) {
+    public String getPositivIdeas(Model model, @RequestParam int problem_id) {
+
         model.addAttribute("saveNegativIdeas", new NegativForm());
         model.addAttribute("savePositivIdeas", new PositivForm());
-        model.addAttribute("negativFormList", negativFormList);
+
+        //System.out.println(negativForm.getProblem_id());
+
+        // TODO aus Datenbank holen
+        List<NegativForm> listNegativ = jdbcTemplate.query("SELECT * FROM negativ WHERE problem_id = ?", new NegativRowMapper(), problem_id);
+
+        model.addAttribute("negativFormList", listNegativ);
 
         return "stepThree";
     }
 
     @PostMapping("stepThree")
-    public String savePositivIdeas(Model model, PositivForm positivForm, NegativForm negativForm) {
+    public String savePositivIdeas(Model model, PositivForm positivForm, String problem_id) {
 
         jdbcTemplate.update("INSERT INTO POSITIV VALUES(?, ?, ?)", positivForm.getId(), positivForm.getPositiv(), positivForm.getNegativ_id());
 
+        //TODO aus Datenbank holen List + model + problem_id(von oben) 
+        List<NegativForm> listNegativ = jdbcTemplate.query("SELECT * FROM negativ WHERE problem_id = ?", new NegativRowMapper(), problem_id);
+        model.addAttribute("negativFormList", listNegativ);
+
         model.addAttribute("savePositivIdeas", new PositivForm());
-        model.addAttribute("negativFormList", negativFormList);
+        model.addAttribute("negativFormList", listNegativ);
 
-//        Integer saveId = this.saveProblemToDBandReturnID(ProblemForm);
-//        PositivForm newPositivForm = new PositivForm();
-//        newPositivForm.setNegativ_id(positivForm.getNegativ_id());
-
-        positivFormList.add(positivForm);
-        model.addAttribute("PositivFormList", positivFormList);
+        //model.addAttribute("PositivFormList", positivFormList);
 
         return "stepThree";
     }
 
     @GetMapping("stepFour")
-    public String output (Model model, PositivForm positivForm, NegativForm negativForm) {
-        model.addAttribute("negativFormList", negativFormList);
-        model.addAttribute("positivFormList", positivFormList);
-        model.addAttribute("savePositivIdeas", new PositivForm());
+    public String output (Model model, PositivForm positivForm, NegativForm negativForm, String problem_id) {
+        model.addAttribute("problem", problem.toString());
+
+        List<NegativForm> listNegativ = jdbcTemplate.query("SELECT * FROM negativ", new NegativRowMapper());
+        List<PositivForm> listPositiv = jdbcTemplate.query("SELECT * FROM positiv", new PositivRowMapper());
+
+        model.addAttribute("negativFormList", listNegativ);
+        model.addAttribute("positivFormList", listPositiv);
 
         return"stepFour";
     }

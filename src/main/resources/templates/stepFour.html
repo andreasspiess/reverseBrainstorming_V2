@@ -17,6 +17,29 @@
     padding-right: 100px;
     }
 
+    .headline {
+    font-weight: 700;
+    text-align: center;
+    color: #26272a;
+    margin-top: 5px;
+    background-color: #8a8992;
+    width: 101rem;
+    height: 7rem;
+    border-radius: 5px;
+    float: left;
+    }
+
+    .headline h1{
+    font-weight: bold;
+    font-size: 50px;
+    margin-top: 30px;
+    }
+
+    .output {
+    color: #ffd45e;
+    font-size: 40px;
+    }
+
     .tableDiv {
     margin-top: rem;
     display: inline-flex;
@@ -97,16 +120,20 @@
 <body>
 <div class="mainDiv">
     <ul>
-        <li><a class="active" href="#home">Home</a></li>
+        <li><a class="active" href="/">Home</a></li>
         <li><a href="#news">News</a></li>
         <li><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Über uns</a></li>
         <li style="float:right"><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Wikipedia Link</a></li>
     </ul>
 
+    <div class="headline">
+        <h1>Deine Ausgabe zum Problem <span class="output" th:text="${problem}"></span></h1>
+    </div>
+
     <div class="tableDiv">
         <!--<img class="header-image" src="tafel.jpg">-->
-        <div class="innerTableDiv" th:each="x : ${negativFormList}">
-            <table class="table table-dark mt-3" >
+        <div class="innerTableDiv">
+            <table class="table table-dark mt-3" th:each="x : ${negativFormList}">
 
                 <thead class="background">
                     <tr class="table">
@@ -115,7 +142,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody th:each="y : ${positivFormList}">
+                <tbody th:if="${x.id == y.negativ_id}" th:each="y : ${positivFormList}">
                     <td scope="col"
                         th:text="${y.getPositiv}">
                     </td>

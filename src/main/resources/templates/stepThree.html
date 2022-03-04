@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400;500;600;700;800&family=Dancing+Script:wght@400;500;600;700&family=Hurricane&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
 </head>
-<body>
 <style>
     body {
     padding: 10px;
@@ -64,15 +64,14 @@
     border-radius: 5px;
     width: 60rem;
     height: 30rem;
-    margin-top: 2rem;
-    margin-left: 2rem;
+    margin: 1rem auto 1rem 1rem;
     }
 
 
 
     .glow-on-hover {
-    margin-left: 23rem;
-    margin-top: rem;;
+    margin-left: 28rem;
+    margin-top: 0rem;
     margin-right: 30px;
     margin-bottom: 5rem;
     width: 220px;
@@ -173,7 +172,7 @@
       display: inline-block;
       font-size: 16px;
       margin-top: 2px;
-      margin-left: 10rem;
+      margin-left: 3rem;
     }
 
     .select {
@@ -196,27 +195,21 @@
 
     .button {
     margin-left: 6rem;
+    display: flex;
     }
 
-    .fusszeile {
-    border-radius: 5px;
-    margin-top: 805px;
-    background-color: #333;
-    width: auto;
-    height: 30px;
-    }
 
     </style>
 <body>
 
-<ul>
-    <li><a class="active" href="location.href='http://localhost:8080/stepOne'">Home</a></li>
-    <li><a href="#news">News</a></li>
-    <li><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Über uns</a></li>
-    <li style="float:right"><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Wikipedia Link</a></li>
-</ul>
+    <ul>
+        <li><a class="active" href="/">Home</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Über uns</a></li>
+        <li style="float:right"><a href="https://de.wikipedia.org/wiki/Kopfstandtechnik">Wikipedia Link</a></li>
+    </ul>
 
-<div class="body2">
+    <div class="body2">
 
     <div>
         <img class="header-image" src="stepThree.jpg">
@@ -225,12 +218,12 @@
         </label>
 
         <div class="inputField">
-            <form method="post" action="stepThree" th:object="${savePositivIdeas}">
+            <form method="post" th:action="${'/stepThree?problem_id=' + negativFormList.get(0).problem_id}" th:object="${savePositivIdeas}">
                 <div>
-                    <select class="select">
+                    <select class="select" th:field="*{negativ_id}">
                         <option th:each="x : ${negativFormList}"
                                 th:text="${x.getNegativ}"
-                                th:value="${negativFormList.indexOf(x)}">
+                                th:value="${x.id}">
                         </option>
                     </select>
                     <input class="input" type="text" th:field="*{positiv}">
@@ -239,8 +232,8 @@
                     <button class="buttonOk" type="submit">Speichern</button>
                     <button class="buttonLöschen" type="reset">Löschen</button>
                 </div>
-                    <button class="glow-on-hover" type="button" onclick="location.href='http://localhost:8080/stepFour'">nächster Schritt -></button>
-
+<!--                <a th:href="'/ansicht?problemId=' + ${negativFormList.get(0).getProblem_id}" type="button" role="button" class="glow-on-hover"></a>-->
+                <button class="glow-on-hover" type="button" onclick="location.href='http://localhost:8080/stepFour'">nächster Schritt -></button>
             </form>
         </div>
     </div>
@@ -256,10 +249,4 @@
     </div>
 
 </body>
-
-<!--    </div>
-    <div class="fusszeile">
-        <label style="color: white; margin-left: 10px;"></label>
-    </div>
--->
 </html>

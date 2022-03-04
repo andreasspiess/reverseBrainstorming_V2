@@ -9,7 +9,7 @@ public class PositivForm {
 
     private Integer id;
     private String positiv;
-    private int negativ_id;
+    private Integer negativ_id;
 
     public String getPositiv() {
         return positiv;

@@ -13,7 +13,7 @@ public class NegativRowMapper implements RowMapper <NegativForm> {
         NegativForm result = new NegativForm();
         result.setId(rs.getInt("id"));
         result.setNegativ(rs.getString("negativ"));
-        result.setProblem_id(rs.getInt("negativ_id"));
+        result.setProblem_id(rs.getInt("problem_id"));
 
         return result;
     }
